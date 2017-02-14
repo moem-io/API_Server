@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+    <meta>
+    <title>모임</title>
+
+</head>
+<body>
+<form action="/oauth/authorize" method="post">
+    <p>Allow access?</p>
+    <input type="hidden" name="oauth_token" value="{{ resource_owner_key }}">
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.username(size=20) }}
+    {{ form.password.label }} {{ form.password(size=20) }}
+    <input type="submit" name="confirm" value="login">
+</form>
+</body>
+</html>

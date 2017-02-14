@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+    <meta>
+    <title>모임</title>
+
+</head>
+<body>
+<form method=post>
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.username(size=20) }}
+    {{ form.password.label }} {{ form.password(size=20) }}
+    <input type="submit" name="login" value="login">
+</form>
+</body>
+</html>
