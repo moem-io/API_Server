@@ -33,8 +33,6 @@ def access_token():
 def authorize(*args, **kwargs):
     print('authorize')
     form = SignInForm(request.form)
-    username = form.username.data
-
     if request.method == 'GET':
         user = current_user()
         if not user:
@@ -43,13 +41,19 @@ def authorize(*args, **kwargs):
         else:
             return True
     elif request.method == 'POST':
+        print('post')
+        username = form.username.data
         user = User.query.filter_by(username=username).first()
         password = form.password.data
         if user and password == user.ps:
+            print('pass')
             session['id'] = user.id
             return True
     flash('아이디 비번 확인 필요', 'error')
-    return redirect(url_for('index'))
+    # return redirect(url_for('index'))
+    # return redirect('http://127.0.0.1:8000')
+    return render_template('signin_oauth.html', form=form)
+
 
 @app.route('/api/me')
 @oauth_provider.require_oauth()
