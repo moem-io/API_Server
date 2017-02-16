@@ -2,17 +2,17 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>모임 서버</title>
+    <title>MOEM_API</title>
 
 </head>
 <body>
     <h1>hello api server!!</h1>
     {% if user %}
         <p>username : {{user.username}}</p>
+        <a href="/signout"><input type="button" name="signout" value="logout"></a>
     {% else %}
         <p>U R not authenticated</p>
+        <a href="/signin"><input type="button" name="login" value="login"></a>
     {% endif %}
-    <a href="/signin"><input type="button" name="login" value="login"></a>
-    <a href="/signout"><input type="button" name="signout" value="logout"></a>
 </body>
 </html>

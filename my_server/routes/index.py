@@ -29,14 +29,11 @@ def add():
     db.session.commit()
     return redirect(url_for('index'))
 
-
-
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     user = current_user()
     if user:
-        username = user.username
-        return render_template('index.html', username=username)
+        return render_template('index.html', user=user)
 
     form = SignInForm(request.form)
     if request.method == 'POST':
@@ -56,7 +53,7 @@ def signin():
 @app.route('/signout')
 def signout():
     session.pop('id', None)
-    session.pop('remote_oauth', None)
+    # session.pop('remote_oauth', None)
     return redirect(url_for('index'))
 
 @app.route('/client')

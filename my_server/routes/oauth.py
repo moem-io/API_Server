@@ -11,7 +11,7 @@ from my_server.model.application.user import User
 from my_server.app import oauth_provider
 
 
-from my_server.form.user import SignInForm
+from my_server.form.user import SignInForm, SignUpForm
 
 
 #---
@@ -54,6 +54,15 @@ def authorize(*args, **kwargs):
     # return redirect('http://127.0.0.1:8000')
     return render_template('signin_oauth.html', form=form)
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignUpForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        # return render_template('index.html.html', form=form)
+        return redirect('http://127.0.0.1:8000')
+
+    return render_template('signup.html', form=form)
 
 @app.route('/api/me')
 @oauth_provider.require_oauth()
