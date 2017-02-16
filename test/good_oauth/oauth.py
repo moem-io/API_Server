@@ -39,14 +39,41 @@ def authorize(*args, **kwargs):
         user = current_user()
         if not user:
             print('signin on oauth/authorize')
+
+            # client_id = kwargs.get('client_id')
+            # client = Client.query.filter_by(client_id=client_id).first()
+            #
+            # kwargs['client'] = client
+            # kwargs['user'] = user
+
+            # return render_template('signin_oauth2.html', form=form, **kwargs)
             return render_template('signin_oauth.html', form=form)
         else:
             return True
     elif request.method == 'POST':
+
+        # user = current_user()
         user = User.query.filter_by(username=username).first()
+
+        # client_id = kwargs.get('client_id')
+        # client_id = request.form['client_id']
+        # client = Client.query.filter_by(client_id=client_id).first()
+
+        # kwargs['client'] = client
+        # kwargs['user'] = user
+
+        # print('kwargs', kwargs)
+        # username = form.username.data
         password = form.password.data
+        # print('username', username)
+
+        # user = User.query.filter_by(username=username).first()
+        # print('username', user.username)
         if user and password == user.ps:
             session['id'] = user.id
+
+            # kwargs['user'] = user
+            # print('kwargs', kwargs['user'])
             return True
     flash('아이디 비번 확인 필요', 'error')
     return redirect(url_for('index'))

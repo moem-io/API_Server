@@ -1,9 +1,12 @@
 from flask import request, render_template, session, redirect, url_for, jsonify
 from my_server.form.user import SignInForm
-from my_server.model.application.user import User
 from werkzeug.security import gen_salt
-from my_server.model.oauth.client import Client
+
 from my_server.app import app, db
+
+from my_server.model.application.user import User
+from my_server.model.oauth.client import Client
+
 
 def current_user():
     if 'id' in session:
@@ -14,10 +17,17 @@ def current_user():
 @app.route('/')
 def index():
     user = current_user()
-    if not user:
-        return render_template('index.html', username='not log in')
-    username = user.username
-    return render_template('index.html', username=username)
+    return render_template('index.html', user=user)
+
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    us = request.args['us']
+    ps = request.args['ps']
+    print(us, ps)
+    item = User(username=us, ps=ps)
+    db.session.add(item)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 
 

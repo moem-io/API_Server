@@ -23,11 +23,55 @@ def current_user():
     return None
 
 
+
+
 @app.route('/oauth/token', methods=['GET', 'POST'])
 @oauth_provider.token_handler
 def access_token():
     return None
 
+# @app.route('/oauth/authorize', methods=['GET', 'POST'])
+# @oauth_provider.authorize_handler
+# def authorize(*args, **kwargs):
+#     user = current_user()
+#     # print('user', user.username)
+#     if not user:
+#         return redirect('/')
+#     if request.method == 'GET':
+#         client_id = kwargs.get('client_id')
+#         client = Client.query.filter_by(client_id=client_id).first()
+#         kwargs['client'] = client
+#         kwargs['user'] = user
+#         return render_template('authorize.html', **kwargs)
+#
+#     confirm = request.form.get('confirm', 'no')
+#     return confirm == 'yes'
+
+#
+# @app.route('/oauth/authorize2', methods=['GET', 'POST'])
+# @oauth_provider.authorize_handler
+# def authorize2(*args, **kwargs):
+#     print('authorize')
+#     form = SignInForm(request.form)
+#
+#     if request.method == 'POST' and form.validate():
+#         username = form.username.data
+#         password = form.password.data
+#     else:
+#         return render_template('signin_oauth.html', form=form)
+#
+#     user = User.query.filter_by(username=username).first()
+#     if user is None:
+#         flash('cannot find username', 'error')
+#         return render_template('signin_oauth.html', form=form)
+#     elif not password == user.ps:
+#         flash('failed ps', 'error')
+#         return render_template('signin_oauth.html', form=form)
+#     else:
+#         print('True')
+#         return True
+#
+#
 @app.route('/oauth/authorize', methods=['GET', 'POST'])
 @oauth_provider.authorize_handler
 def authorize(*args, **kwargs):
@@ -39,16 +83,42 @@ def authorize(*args, **kwargs):
         user = current_user()
         if not user:
             print('signin on oauth/authorize')
-            return render_template('signin_oauth.html', form=form)
+
+            client_id = kwargs.get('client_id')
+            client = Client.query.filter_by(client_id=client_id).first()
+
+            kwargs['client'] = client
+            kwargs['user'] = user
+
+            return render_template('signin_oauth2.html', form=form, **kwargs)
+            # return render_template('signin_oauth.html', form=form)
         else:
             return True
     elif request.method == 'POST':
+
+        # user = current_user()
         user = User.query.filter_by(username=username).first()
+
+        # client_id = kwargs.get('client_id')
+        client_id = request.form['client_id']
+        client = Client.query.filter_by(client_id=client_id).first()
+
+        kwargs['client'] = client
+        kwargs['user'] = user
+
+        # print('kwargs', kwargs)
+        # username = form.username.data
         password = form.password.data
+        # print('username', username)
+
+        # user = User.query.filter_by(username=username).first()
+        # print('username', user.username)
         if user and password == user.ps:
             session['id'] = user.id
+
+            # kwargs['user'] = user
+            # print('kwargs', kwargs['user'])
             return True
-    flash('아이디 비번 확인 필요', 'error')
     return redirect(url_for('index'))
 
 @app.route('/api/me')
@@ -99,6 +169,7 @@ def save_token(token, request, *args, **kwargs):
     toks = Token.query.filter_by(
         client_id=request.client.client_id,
         user_id=request.user.id
+        # user_id = current_user().id
     )
     # make sure that every client has only one token connected to a user
     for t in toks:
@@ -119,3 +190,10 @@ def save_token(token, request, *args, **kwargs):
     db.session.add(tok)
     db.session.commit()
     return tok
+
+@oauth_provider.usergetter
+def get_user(username, password, *args, **kwargs):
+    user = User.query.filter_by(username=username).first()
+    if user.check_password(password):
+        return user
+    return None

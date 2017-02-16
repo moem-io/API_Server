@@ -6,8 +6,11 @@
 </head>
 <body>
     <h1>hello api server!!</h1>
-    <p>username : {{username}}</p>
-
+    {% if user %}
+        <p>username : {{user.username}}</p>
+    {% else %}
+        <p>U R not authenticated</p>
+    {% endif %}
     <a href="/signin"><input type="button" name="login" value="login"></a>
     <a href="/signout"><input type="button" name="signout" value="logout"></a>
 </body>
