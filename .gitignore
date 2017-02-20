@@ -137,3 +137,6 @@ ENV/
 ########my
 .idea/*
 .idea
+
+*.ini
+wsgi.py
