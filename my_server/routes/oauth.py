@@ -1,6 +1,8 @@
 from my_server.app import app, db
 from datetime import datetime, timedelta
 
+from werkzeug.security import gen_salt
+
 from flask import redirect, jsonify, request, render_template, session, url_for, flash
 from my_server.model.oauth.client import Client
 
@@ -11,7 +13,7 @@ from my_server.model.application.user import User
 from my_server.app import oauth_provider
 
 
-from my_server.form.user import SignInForm, SignUpForm
+from my_server.form.user import SignInForm
 
 
 #---
@@ -22,11 +24,11 @@ def current_user():
         return User.query.get(uid)
     return None
 
-
-@app.route('/oauth/token', methods=['GET', 'POST'])
-@oauth_provider.token_handler
-def access_token():
-    return None
+@app.route('/api/me')
+@oauth_provider.require_oauth()
+def me():
+    user = request.oauth.user
+    return jsonify(username=user.username)
 
 @app.route('/oauth/authorize', methods=['GET', 'POST'])
 @oauth_provider.authorize_handler
@@ -54,23 +56,33 @@ def authorize(*args, **kwargs):
     # return redirect('http://127.0.0.1:8000')
     return render_template('signin_oauth.html', form=form)
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    form = SignUpForm(request.form)
-
-    if request.method == 'POST' and form.validate():
-        # return render_template('index.html.html', form=form)
-        return redirect('http://127.0.0.1:8000')
-
-    return render_template('signup.html', form=form)
-
-@app.route('/api/me')
-@oauth_provider.require_oauth()
-def me():
-    user = request.oauth.user
-    return jsonify(username=user.username)
 
 #-------------------------------------get, set---------------------------------------#
+
+@app.route('/client')
+def client():
+    user = current_user()
+    if not user:
+        return redirect('/')
+    item = Client(
+        client_id=gen_salt(40),
+        client_secret=gen_salt(50),
+        _redirect_uris=' '.join([
+            'http://127.0.0.1:8000/authorized',
+            'http://127.0.1:8000/authorized',
+            'http://127.1:8000/authorized',
+            ]),
+        _default_scopes='email',
+        user_id=user.id,
+    )
+    db.session.add(item)
+    db.session.commit()
+    return jsonify(
+        client_id=item.client_id,
+        client_secret=item.client_secret,
+    )
+
+
 @oauth_provider.clientgetter
 def load_client(client_id):
     return Client.query.filter_by(client_id=client_id).first()
@@ -132,3 +144,8 @@ def save_token(token, request, *args, **kwargs):
     db.session.add(tok)
     db.session.commit()
     return tok
+
+@app.route('/oauth/token', methods=['GET', 'POST'])
+@oauth_provider.token_handler
+def access_token():
+    return None
