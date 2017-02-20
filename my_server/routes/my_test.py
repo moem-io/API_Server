@@ -8,7 +8,7 @@ from my_server.model.application.user import User
 from my_server.form.user import SignInForm, SignUpForm
 
 
-@app.route('test/add', methods=['GET', 'POST'])
+@app.route('/test/add', methods=['GET', 'POST'])
 def add():
     us = request.args['us']
     ps = request.args['ps']

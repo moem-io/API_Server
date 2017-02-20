@@ -6,7 +6,8 @@ from flask_oauthlib.provider import OAuth2Provider
 app = Flask(__name__)
 api = Api(app)
 
-app.secret_key = 'secret'
+app.config.from_object('config')
+# app.secret_key = 'secret'
 
 db = SQLAlchemy(app)
 
