@@ -17,9 +17,9 @@ oauth_provider = OAuth2Provider(app)
 from my_server.model import *
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/fl_db'
-app.config.update({
-    'SQLALCHEMY_DATABASE_URI': 'mysql+pymysql://root:1234@localhost/fl_db',
-})
+# app.config.update({
+#     'SQLALCHEMY_DATABASE_URI': 'mysql+pymysql://root:1234@localhost/fl_db',
+# })
 db.create_all()
 
 from my_server.api import *
