@@ -6,7 +6,7 @@ DB_ID = os.environ['DB_ID']
 DB_PS = os.environ['DB_PS']
 DB_HOST = os.environ['DB_HOST']
 
-SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{0]:{1}@{2}/{3}".format(DB_ID,
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{0}:{1}@{2}/{3}".format(DB_ID,
                                                                    DB_PS,
                                                                    DB_HOST,
                                                                    DB_NAME)
