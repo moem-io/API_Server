@@ -31,9 +31,7 @@ def add_client():
         client_id=gen_salt(40),
         client_secret=gen_salt(50),
         _redirect_uris=' '.join([
-            'http://52.79.188.83:8000/authorized',
-            'http://52.188.83:8000/authorized',
-            'http://52.83:8000/authorized',
+            'http://52.79.188.83/authorized',
         ]),
         _default_scopes='email',
         user_id=user.id,
