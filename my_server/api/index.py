@@ -14,3 +14,4 @@ class board(Resource):
         # req_body = request.form['title']
         print(req_body)
         return req_body
+

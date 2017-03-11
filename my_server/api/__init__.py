@@ -1,4 +1,5 @@
 __all__ = [
     'index',
-    'account'
+    'account',
+    'hub',
 ]
