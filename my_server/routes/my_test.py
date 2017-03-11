@@ -9,6 +9,7 @@ from my_server.routes.oauth import current_user
 from my_server.form.user import SignInForm, SignUpForm
 
 from my_server.model.oauth.client import Client
+import os
 
 
 @app.route('/test/add/user', methods=['GET', 'POST'])
@@ -27,11 +28,12 @@ def add_client():
     user = current_user()
     if not user:
         return redirect('/')
+    re = app.config.get('REDIRECT_URI')
     item = Client(
         client_id=gen_salt(40),
         client_secret=gen_salt(50),
         _redirect_uris=' '.join([
-            'http://52.79.188.83/authorized',
+            re,
         ]),
         _default_scopes='email',
         user_id=user.id,
