@@ -2,6 +2,7 @@ from flask import request, render_template, session, redirect, url_for, jsonify
 from my_server.form.user import SignInForm
 
 from my_server.app import app, db
+from my_server.app import oauth_provider
 
 from my_server.model.application.user import User
 
@@ -39,11 +40,24 @@ def signin():
         return redirect(url_for('index'))
     return render_template('signin.html', form=form)
 
+
 @app.route('/signout')
 def signout():
     session.pop('id', None)
-    session.pop('remote_oauth', None)
+    # session.pop('remote_oauth', None)
+
     return redirect(url_for('index'))
+
+@app.route('/api/signout')
+@oauth_provider.require_oauth()
+def api_signout():
+    print('api', 'signout')
+    session.pop('id', None)
+    if not current_user():
+        print('current')
+    # session.pop('remote_oauth', None)
+
+    return 'ho'
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

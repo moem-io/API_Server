@@ -43,7 +43,7 @@ def authorize(*args, **kwargs):
         user = current_user()
         if not user:
             print('signin on oauth/authorize')
-            return render_template('signin_oauth.html', form=form)
+            return render_template('signin_form.html', form=form)
         else:
             return True
     elif request.method == 'POST':
@@ -58,7 +58,7 @@ def authorize(*args, **kwargs):
     flash('아이디 비번 확인 필요', 'error')
     # return redirect(url_for('index'))
     # return redirect('http://127.0.0.1:8000')
-    return render_template('signin_oauth.html', form=form)
+    return render_template('signin_form.html', form=form)
 
 
 #-------------------------------------get, set---------------------------------------#
