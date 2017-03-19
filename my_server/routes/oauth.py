@@ -30,6 +30,10 @@ def me():
     user = request.oauth.user
     return jsonify(username=user.username)
 
+
+
+
+
 @app.route('/oauth/authorize', methods=['GET', 'POST'])
 @oauth_provider.authorize_handler
 def authorize(*args, **kwargs):

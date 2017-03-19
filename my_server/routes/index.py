@@ -42,7 +42,7 @@ def signin():
 @app.route('/signout')
 def signout():
     session.pop('id', None)
-    # session.pop('remote_oauth', None)
+    session.pop('remote_oauth', None)
     return redirect(url_for('index'))
 
 @app.route('/signup', methods=['GET', 'POST'])
