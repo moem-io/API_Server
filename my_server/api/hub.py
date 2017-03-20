@@ -59,6 +59,21 @@ def hub_info():
     return jsonify(payload)
 
 
+@app.route('/api/upload', methods=['GET', 'POST'])
+@oauth_provider.require_oauth()
+def upload():
+    user = request.oauth.user
+    upload_app = request.form['upload_app']
+    print('upload_app', upload_app)
+
+    return jsonify(username=user.username)
+
+
+
+
+
+
+# test
 @app.route('/api/post_test', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
 def post_test():
