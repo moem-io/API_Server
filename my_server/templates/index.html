@@ -7,12 +7,5 @@
 </head>
 <body>
     <h1>hello api server!!</h1>
-    {% if user %}
-        <p>username : {{user.username}}</p>
-        <a href="/signout"><input type="button" name="signout" value="logout"></a>
-    {% else %}
-        <p>U R not authenticated</p>
-        <a href="/signin"><input type="button" name="login" value="login"></a>
-    {% endif %}
 </body>
 </html>

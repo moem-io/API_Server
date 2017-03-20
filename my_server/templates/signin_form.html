@@ -47,10 +47,10 @@
                                         type: 'empty',
                                         prompt: '아이디를 입력하세요'
                                     },
-{#                                    {#}
-{#                                        type: 'email',#}
-{#                                        prompt: 'email형식을 입력하세요'#}
-{#                                    }#}
+                                    {#                                    {#}
+                                    {#                                        type: 'email',#}
+                                    {#                                        prompt: 'email형식을 입력하세요'#}
+                                    {#                                    }#}
                                 ]
                             },
                             password: {
@@ -100,8 +100,16 @@
                 <input type="submit" name="confirm" value="로그인" class="ui fluid large teal submit button">
             </div>
 
-            <div class="ui error message"></div>
+{#            <div class="ui error message"></div>#}
 
+            {% with errors = get_flashed_messages(category_filter=['error']) %}
+                {%- for message in errors %}
+                    <div class="ui negative message">
+                        <div class="header">로그인에 실패했습니다</div>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            {% endwith %}
         </form>
 
         <div class="ui message">
