@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.js"></script>
 
     <!-- Site Properties -->
-    <title>Login Example - Semantic</title>
+    <title>Login</title>
 
     <style type="text/css">
         body {
@@ -24,16 +24,16 @@
 
         body > .grid {
             height: 100%;
-        }
 
-        .image {
-            margin-top: -100px;
         }
 
         .column {
-            max-width: 450px;
+            max-width: 400px;
+        {#            border: solid 1px #000 !important;#}
+
         }
     </style>
+
     <script>
         $(document)
             .ready(function () {
@@ -77,14 +77,19 @@
 
 <div class="ui middle aligned center aligned grid">
     <div class="column">
-        <h2 class="ui teal image header">
-            <div class="content">
+
+        <div class="ui teal center aligned header">
+            <a href="https://moem.io" class="ui item">
+{#                <img src="../static/images/logo.png" alt="">#}
                 <h1>DIYT</h1>
-            </div>
-        </h2>
+            </a>
+        </div>
+
         <form action="{{ request.url }}" method="post" class="ui large form">
+
             {{ form.csrf_token }}
-            <div class="ui stacked segment">
+
+            <div class="ui segment">
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
@@ -97,24 +102,35 @@
                         {{ form.password(placeholder="비밀번호", size=20) }}
                     </div>
                 </div>
-                <input type="submit" name="confirm" value="로그인" class="ui fluid large teal submit button">
+
+
+                {% with errors = get_flashed_messages(category_filter=['error']) %}
+                    {%- for message in errors %}
+                        <div class="ui negative message">
+                            <div class="header">로그인에 실패했습니다</div>
+                            <p>{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+
+                <div class="field">
+                    <input type="submit" name="confirm" value="로그인" class="ui fluid large teal submit button">
+                </div>
+
+                <div class="field">
+                    <a href="/signup" class="fluid ui animated fade teal basic button">
+                        <div class="visible content">아직 회원이 아니신가요?</div>
+                        <div class="hidden content">가입하기</div>
+                    </a>
+                </div>
+
+
             </div>
 
-{#            <div class="ui error message"></div>#}
+            {#            <div class="ui error message"></div>#}
 
-            {% with errors = get_flashed_messages(category_filter=['error']) %}
-                {%- for message in errors %}
-                    <div class="ui negative message">
-                        <div class="header">로그인에 실패했습니다</div>
-                        <p>{{ message }}</p>
-                    </div>
-                {% endfor %}
-            {% endwith %}
         </form>
 
-        <div class="ui message">
-            처음이신가요?<a href="#">회원 가입</a>
-        </div>
     </div>
 </div>
 
