@@ -19,7 +19,11 @@
 
     <style type="text/css">
         body {
-            background-color: #DADADA;
+            background: url(/static/images/bg8.jpg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
         }
 
         body > .grid {
@@ -78,18 +82,21 @@
 <div class="ui middle aligned center aligned grid">
     <div class="column">
 
-        <div class="ui teal center aligned header">
-            <a href="https://moem.io" class="ui item">
-{#                <img src="../static/images/logo.png" alt="">#}
-                <h1>DIYT</h1>
-            </a>
-        </div>
 
         <form action="{{ request.url }}" method="post" class="ui large form">
 
             {{ form.csrf_token }}
 
             <div class="ui segment">
+
+                <div class="ui teal image header">
+{#                    <a href="https://moem.io" id="logo">#}
+                        {#                        <h1>DIYT</h1>#}
+{#                        <img src="../static/images/logo.png" alt="">#}
+{#                    </a>#}
+                    <h1>DIYT</h1>
+                </div>
+
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
