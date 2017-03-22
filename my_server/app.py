@@ -2,9 +2,12 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_oauthlib.provider import OAuth2Provider
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 api = Api(app)
+
+bcrypt = Bcrypt(app)
 
 app.config.from_object('config')
 # app.secret_key = 'secret'

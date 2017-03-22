@@ -15,14 +15,15 @@ from my_server.app import oauth_provider
 
 from my_server.form.user import SignInForm
 
+import bcrypt
 
 #---
-def current_user():
-    if 'id' in session:
-        print('id')
-        uid = session['id']
-        return User.query.get(uid)
-    return None
+# def current_user():
+#     if 'id' in session:
+#         print('id')
+#         uid = session['id']
+#         return User.query.get(uid)
+#     return None
 
 @app.route('/api/me')
 @oauth_provider.require_oauth()
@@ -42,10 +43,12 @@ def authorize(*args, **kwargs):
         username = form.username.data
         user = User.query.filter_by(username=username).first()
         password = form.password.data
-        if user and password == user.ps:
-            print('pass')
+
+        if user and user.is_valid_password(password):
+            print('hashed', 'ok')
             return True
-    flash('아이디, 비밀번호 확인 필요', 'error')
+
+        flash('아이디, 비밀번호 확인 필요', 'error')
     return render_template('signin_form.html', form=form)
 
 

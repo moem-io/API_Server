@@ -1,16 +1,164 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>MOEM_API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--jquery-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!--semantic-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.6/semantic.min.js"></script>
+
+    <!-- Site Properties -->
+    <title>Login</title>
+
+    <style type="text/css">
+        body {
+            background: url(/static/images/bg8.jpg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        body > .grid {
+            height: 100%;
+
+        }
+
+        .column {
+            max-width: 400px;
+        {#            border: solid 1px #000 !important;#}
+
+        }
+    </style>
+
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.form')
+                    .form({
+                        fields: {
+                            username: {
+                                identifier: 'username',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: '아이디를 입력하세요'
+                                    },
+                                    {#                                    {#}
+                                    {#                                        type: 'email',#}
+                                    {#                                        prompt: 'email형식을 입력하세요'#}
+                                    {#                                    }#}
+                                ]
+                            },
+                            password: {
+                                identifier: 'password',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: '비밀번호를 입력하세요'
+                                    },
+                                    {
+                                        type: 'length[6]',
+                                        prompt: '비밀번호는 6자 이상입니다'
+                                    }
+                                ]
+                            },
+                            password_check: {
+                                identifier: 'password_check',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: '비밀번호를 확인하세요'
+                                    },
+                                ]
+                            }
+                        }
+                    })
+                ;
+            })
+        ;
+    </script>
 </head>
 <body>
-<form method=post>
-    {{ form.csrf_token }}
-    {{ form.username.label }} {{ form.username(size=20) }}
-    {{ form.password.label }} {{ form.password(size=20) }}
-    <input type="submit" name="login" value="login">
-</form>
+
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+
+
+        <form action="{{ request.url }}" method="post" class="ui large form">
+
+            {{ form.csrf_token }}
+
+            <div class="ui segment">
+
+                <div class="ui teal image header">
+                    {#                    <a href="https://moem.io" id="logo">#}
+                    {#                        <h1>DIYT</h1>#}
+                    {#                        <img src="../static/images/logo.png" alt="">#}
+                    {#                    </a>#}
+                    <h1>DIYT</h1>
+                </div>
+
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        {{ form.username(placeholder="아이디", size=20) }}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        {{ form.password(placeholder="비밀번호", size=20) }}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        {{ form.password_check(placeholder="비밀번호 확인", size=20) }}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="child icon"></i>
+                        {{ form.name(placeholder="이름", size=20) }}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="home icon"></i>
+                        {{ form.belong(placeholder="소속", size=20) }}
+                    </div>
+                </div>
+
+                <div class="ui error message"></div>
+                {% with errors = get_flashed_messages(category_filter=['error']) %}
+                    {%- for message in errors %}
+                        <div class="ui negative message">
+                            <div class="header">회원가입에 실패했습니다</div>
+                            <p>{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+
+                <div class="field">
+                    <input type="submit" name="confirm" value="가입하기" class="ui fluid large teal submit button">
+                </div>
+
+            </div>
+
+
+        </form>
+
+    </div>
+</div>
+
 </body>
+
 </html>

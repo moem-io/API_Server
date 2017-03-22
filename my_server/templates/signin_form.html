@@ -36,6 +36,7 @@
         {#            border: solid 1px #000 !important;#}
 
         }
+
     </style>
 
     <script>
@@ -71,10 +72,8 @@
                                 ]
                             }
                         }
-                    })
-                ;
-            })
-        ;
+                    });
+            });
     </script>
 </head>
 <body>
@@ -90,10 +89,10 @@
             <div class="ui segment">
 
                 <div class="ui teal image header">
-{#                    <a href="https://moem.io" id="logo">#}
-                        {#                        <h1>DIYT</h1>#}
-{#                        <img src="../static/images/logo.png" alt="">#}
-{#                    </a>#}
+                    {#                    <a href="https://moem.io" id="logo">#}
+                    {#                        <h1>DIYT</h1>#}
+                    {#                        <img src="../static/images/logo.png" alt="">#}
+                    {#                    </a>#}
                     <h1>DIYT</h1>
                 </div>
 
@@ -110,9 +109,11 @@
                     </div>
                 </div>
 
+{#                <div class="ui error message"></div>#}
+
 
                 {% with errors = get_flashed_messages(category_filter=['error']) %}
-                    {%- for message in errors %}
+                    {% for message in errors %}
                         <div class="ui negative message">
                             <div class="header">로그인에 실패했습니다</div>
                             <p>{{ message }}</p>
@@ -134,7 +135,6 @@
 
             </div>
 
-            {#            <div class="ui error message"></div>#}
 
         </form>
 

@@ -9,3 +9,7 @@ class SignInForm(FlaskForm):
 class SignUpForm(FlaskForm):
     username = StringField('username', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
+    password_check = PasswordField('password_check', validators=[DataRequired()])
+
+    name = StringField('name', validators=[DataRequired()])
+    belong = StringField('belong', validators=[DataRequired()])

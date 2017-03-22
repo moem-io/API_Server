@@ -12,3 +12,5 @@ SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{0}:{1}@{2}/{3}".format(DB_ID,
                                                                    DB_NAME)
 
 REDIRECT_URI = os.environ['REDIRECT_URI']
+
+WEB_URI = os.environ['WEB_URI']
