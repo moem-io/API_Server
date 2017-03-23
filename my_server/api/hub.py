@@ -8,29 +8,26 @@ from my_server.model.application.user import User
 from my_server.app import oauth_provider, app
 
 
-# @api.resource(('/hub_register'))
-# class hub_register(Resource):
-#     def get(self):
-#         # user = request.oauth.user
-#         # username = 'a'
-#         # user = User.query.filter_by(username=username).first()
-#         user = current_user()
-#         if user:
-#             print('username', user.username)
-#
-#             hub = Hub.query.filter_by(user_id=user.id).first()
-#             if not hub:
-#                 print('make hub')
-#                 hub_id = 'abcdefg'
-#                 hub_secret = 'abcdefg'
-#                 item = Hub(
-#                     hub_id=hub_id,
-#                     hub_secret=hub_secret,
-#                     user_id=user.id,
-#                 )
-#                 db.session.add(item)
-#                 db.session.commit()
-#         return redirect(url_for('index'))
+@app.route('/api/hub_register', methods=['GET', 'POST'])
+@oauth_provider.require_oauth()
+def hub_register():
+    user = request.oauth.user
+    if user:
+        print('username', user.username)
+
+        hub = Hub.query.filter_by(user_id=user.id).first()
+        if not hub:
+            print('make hub')
+            hub_id = 'abcdefg'
+            hub_secret = 'abcdefg'
+            item = Hub(
+                hub_id=hub_id,
+                hub_secret=hub_secret,
+                user_id=user.id,
+            )
+            db.session.add(item)
+            db.session.commit()
+    return redirect(url_for('index'))
 
 
 @app.route('/api/hub_info', methods=['GET', 'POST'])
@@ -50,12 +47,17 @@ def hub_info():
     hub = Hub.query.filter_by(user_id=user.id).first()
     print('username', username)
 
-    if hub:
-        payload = {'hub_status': 'OK'}
+    hub_alive = True
+
+    if hub and hub_alive:
+        payload = {'hub_status': '켜짐'}
+        payload['hub_id'] = hub.hub_id
+    elif hub:
+        payload = {'hub_status': '꺼짐'}
         payload['hub_id'] = hub.hub_id
     else:
-        payload = {'hub_status': 'XX'}
-        payload['hub_id'] = 'XX'
+        payload = {'hub_status': '없음'}
+        payload['hub_id'] = '없음'
     return jsonify(payload)
 
 
@@ -67,10 +69,6 @@ def upload():
     print('upload_app', upload_app)
 
     return jsonify(username=user.username)
-
-
-
-
 
 
 # test
