@@ -29,6 +29,7 @@ import bcrypt
 @oauth_provider.require_oauth()
 def me():
     user = request.oauth.user
+    print('user.username', user.username)
     return jsonify(username=user.username)
 
 @app.route('/oauth/authorize', methods=['GET', 'POST'])
@@ -125,8 +126,8 @@ def save_token(token, request, *args, **kwargs):
         user_id=request.user.id
     )
     # make sure that every client has only one token connected to a user
-    for t in toks:
-        db.session.delete(t)
+    # for t in toks:
+    #     db.session.delete(t)
 
     expires_in = token.pop('expires_in')
     expires = datetime.utcnow() + timedelta(seconds=expires_in)
