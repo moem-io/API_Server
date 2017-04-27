@@ -1,6 +1,8 @@
-from my_server.app import db
+from my_server.app import db, app
 
 class Hub(db.Model):
+    __bind_key__ = app.config.get('DB_NAME')
+
     id = db.Column(db.Integer, primary_key=True)
 
     hub_id = db.Column(db.String(40))

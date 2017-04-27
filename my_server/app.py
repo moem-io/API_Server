@@ -23,7 +23,10 @@ from my_server.model import *
 # app.config.update({
 #     'SQLALCHEMY_DATABASE_URI': 'mysql+pymysql://root:1234@localhost/fl_db',
 # })
-db.create_all()
+# for x in ['DB_NAME', 'DB_NAME2']:
+#     db.create_all(bind=app.config[x])
+db.create_all(bind=app.config['DB_NAME'])
+db.create_all(bind=app.config['EX_DB'])
 
 from my_server.api import *
 from my_server.routes import *

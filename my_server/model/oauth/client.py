@@ -1,6 +1,8 @@
-from my_server.app import db
+from my_server.app import db, app
 
 class Client(db.Model):
+    __bind_key__ = app.config.get('DB_NAME')
+
     client_id = db.Column(db.String(40), primary_key=True)
     client_secret = db.Column(db.String(55), nullable=False)
 
