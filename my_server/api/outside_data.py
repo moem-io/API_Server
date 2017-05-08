@@ -17,6 +17,7 @@ from flask import jsonify
 #     def get(self):
 #         return 'hello api server!!'
 
+#
 @api.resource('/outside/weather')
 class outside_weather(Resource):
     def get(self):

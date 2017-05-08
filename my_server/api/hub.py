@@ -6,6 +6,7 @@ from my_server.model.application.hub import Hub
 from my_server.model.application.user import User
 # from my_server.routes.oauth import current_user
 from my_server.app import oauth_provider, app
+import paho.mqtt.client as mqtt
 
 
 @app.route('/api/hub_register', methods=['GET', 'POST'])
@@ -78,3 +79,12 @@ def post_test():
     test = request.form['abc']
     print('test', test)
     return jsonify(test=test)
+
+@app.route('/test/mqtt', methods=['GET', 'POST'])
+def test_mqtt():
+    mqttc = mqtt.Client("python_pub")  # MQTT Client 오브젝트 생성
+    # mqttc.connect("test.mosquitto.org", 1883)    # MQTT 서버에 연결
+    mqttc.connect("13.124.19.161", 1883)  # MQTT 서버에 연결
+    mqttc.publish("hello/world", "123")  # 'hello/world' 토픽에 "Hello World!"라는 메시지 발행
+    mqttc.loop(2)
+    return 'suc'
