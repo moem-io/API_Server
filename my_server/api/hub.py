@@ -19,7 +19,7 @@ def hub_register():
         hub = Hub.query.filter_by(user_id=user.id).first()
         if not hub:
             print('make hub')
-            hub_id = '00001215'
+            hub_id = '00001214'
             hub_secret = 'abcdefg'
             item = Hub(
                 hub_id=hub_id,
@@ -98,7 +98,7 @@ def test_mqtt():
     mqttc = mqtt.Client("python_pub")  # MQTT Client 오브젝트 생성
     # mqttc.connect("test.mosquitto.org", 1883)    # MQTT 서버에 연결
     mqttc.connect("13.124.19.161", 1883)  # MQTT 서버에 연결
-    mqttc.publish("control/motor", "Motor ON")  # 'hello/world' 토픽에 "Hello World!"라는 메시지 발행
+    mqttc.publish("control/motor/00001214", "1,0")  # 'hello/world' 토픽에 "Hello World!"라는 메시지 발행
     mqttc.loop(2)
     return 'suc'
 
