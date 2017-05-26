@@ -57,7 +57,8 @@ def authorize(*args, **kwargs):
 
 @app.route('/client')
 def client():
-    user = current_user()
+    user = User.query.filter_by(username='qwerty').first()
+
     if not user:
         return redirect('/')
     item = Client(

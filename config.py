@@ -24,8 +24,8 @@ SQLALCHEMY_BINDS = {
                                                        EX_DB),
 }
 
-SQLALCHEMY_TRACK_MODIFICATIONS = True
-SQLALCHEMY_ECHO = 'True'
+# SQLALCHEMY_TRACK_MODIFICATIONS = True
+# SQLALCHEMY_ECHO = 'True'
 
 TEMPLATES_AUTO_RELOAD = True
 

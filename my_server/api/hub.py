@@ -19,7 +19,7 @@ def hub_register():
         hub = Hub.query.filter_by(user_id=user.id).first()
         if not hub:
             print('make hub')
-            hub_id = 'abcdefg'
+            hub_id = '00001215'
             hub_secret = 'abcdefg'
             item = Hub(
                 hub_id=hub_id,
@@ -64,12 +64,25 @@ def hub_info():
 
 @app.route('/api/upload', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
-def upload():
+def api_upload():
     user = request.oauth.user
     upload_app = request.form['upload_app']
     print('upload_app', upload_app)
 
     return jsonify(username=user.username)
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    upload_app_title = request.form['upload_app_title']
+    upload_app = request.form['upload_app']
+    print('upload_app', upload_app)
+
+    mqttc = mqtt.Client("python_pub")  # MQTT Client 오브젝트 생성
+    mqttc.connect("13.124.19.161", 1883)  # MQTT 서버에 연결
+    mqttc.publish("app/upload/00001214", upload_app_title+','+upload_app)  # 'hello/world' 토픽에 "Hello World!"라는 메시지 발행
+    mqttc.loop(2)
+
+    return jsonify(username='hi')
 
 
 # test
@@ -88,3 +101,4 @@ def test_mqtt():
     mqttc.publish("control/motor", "Motor ON")  # 'hello/world' 토픽에 "Hello World!"라는 메시지 발행
     mqttc.loop(2)
     return 'suc'
+
