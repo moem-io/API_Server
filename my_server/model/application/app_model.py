@@ -1,0 +1,31 @@
+from my_server.app import db, app
+
+class AppModel(db.Model):
+    __bind_key__ = app.config.get('DB_NAME')
+
+    __tablename__ = 'app_model'
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8',
+    }
+    id = db.Column(db.Integer, primary_key=True)
+    app_name = db.Column(db.String(100), nullable=False )
+    app_detail = db.Column(db.String(100), nullable=False )
+    app_switch = db.Column(db.Boolean, default=True)
+    app_input = db.Column(db.String(100), nullable=False )
+    app_input_detail = db.Column(db.String(100), nullable=False )
+    app_output = db.Column(db.String(100), nullable=False )
+    app_output_detail = db.Column(db.Boolean, default=True)
+
+    def __init__(self, id, app_name, app_detail, app_switch, app_input, app_input_detail, app_output, app_output_detail):
+        self.id = id
+        self.app_name = app_name
+        self.app_detail = app_detail
+        self.app_switch = app_switch
+        self.app_input = app_input
+        self.app_input_detail = app_input_detail
+        self.app_output = app_output
+        self.app_output_detail = app_output_detail
+
+    def __repr__(self):
+        return "<Nodes('%s', '%s', '%s')>" % (self.id, self.app_name, self.app_detail)
