@@ -85,7 +85,7 @@ class app_info(Resource):
 @api.resource('/ex_info')
 class ex_info(Resource):
     def get(self):
-        mise = Mise.query.all()
+        mise = Mise.query.all()[0]
         weather = Weather.query.all()
         mise_json = json.dumps(mise, cls=AlchemyEncoder)
         weather_json = json.dumps(weather, cls=AlchemyEncoder)
@@ -93,7 +93,7 @@ class ex_info(Resource):
         data = {}
         data['mise'] = json.loads(mise_json)
         data['weather'] = json.loads(weather_json)
-        print('jsonify type', data)
+        # print('jsonify type', data['mise'])
 
 
         return jsonify(data)
