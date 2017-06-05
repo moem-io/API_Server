@@ -10,7 +10,7 @@ from my_server.model.application.outside_data import Weather
 
 # from sqlalchemy.ext.serializer import loads, dumps
 from flask import jsonify
-
+from my_server.model.application.outside_data import Mise
 
 # @api.resource('/')
 # class index(Resource):
@@ -34,4 +34,10 @@ class outside_weather(Resource):
     #     req_body = request.form['title']
         # print(req_body)
         # return req_body
+
+@api.resource('/outside/mise')
+class outside_mise(Resource):
+    def get(self):
+        w = Mise.query.all()
+        return jsonify(json_list=[i.serialize for i in w])
 

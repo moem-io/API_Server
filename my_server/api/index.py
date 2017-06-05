@@ -6,6 +6,7 @@ from my_server.app import api
 from my_server.model.application.hub import Hub
 from flask import jsonify
 from my_server.model.application.app_model import AppModel
+from my_server.model.application.outside_data import *
 from my_server.app import db
 import json
 
@@ -77,4 +78,22 @@ class app_info(Resource):
 
         data['apps'] = json.loads(app_model_json)
         # print('jsonify type', jsonify(data))
+        return jsonify(data)
+
+
+
+@api.resource('/ex_info')
+class ex_info(Resource):
+    def get(self):
+        mise = Mise.query.all()
+        weather = Weather.query.all()
+        mise_json = json.dumps(mise, cls=AlchemyEncoder)
+        weather_json = json.dumps(weather, cls=AlchemyEncoder)
+
+        data = {}
+        data['mise'] = json.loads(mise_json)
+        data['weather'] = json.loads(weather_json)
+        print('jsonify type', data)
+
+
         return jsonify(data)
