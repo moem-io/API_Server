@@ -2,7 +2,7 @@ from flask_restful import Resource
 from flask import request, redirect, url_for, jsonify, make_response
 from my_server.app import api
 from my_server.app import db
-from my_server.model.application.hub import Hub
+from my_server.model.application.hub import Hub, node, link
 from my_server.model.application.user import User
 from my_server.model.application.app_model import AppModel
 
@@ -10,7 +10,7 @@ from my_server.model.application.app_model import AppModel
 from my_server.app import oauth_provider, app
 import paho.mqtt.client as mqtt
 import json
-
+from my_server.api.index import AlchemyEncoder
 
 @app.route('/api/hub_register', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
@@ -150,8 +150,33 @@ class node_connect(Resource):
 
     def post(self):
         if True:
-            resp = make_response(200)
-            return resp
+            data = request.data
+            # print('data', json.loads(data.decode()))
+            data_json = json.loads(data.decode())
+
+            db.session.query(node).delete()
+            db.session.query(link).delete()
+
+            for i in data_json['node']:
+                # print('i', i)
+                db.session.add(node(i['name'], i['radius'], i['rgb']))
+            for i in data_json['link']:
+                # print('i', i)
+                db.session.add(link(i['source'], i['target'], i['length']))
+            db.session.commit()
+
+            # resp = make_response(200)
+            return 'hoyeon'
+
+@api.resource('/node/connect/info')
+class node_connect_info(Resource):
+    def get(self):
+        data = {}
+        data['node'] = json.dumps(db.session.query(node).all(), cls=AlchemyEncoder)
+        data['link'] = json.dumps(db.session.query(link).all(), cls=AlchemyEncoder)
+        # print('data', data)
+        return jsonify(data)
+
 
 
 # test
