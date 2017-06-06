@@ -1,4 +1,7 @@
 from my_server.app import db, app
+from sqlalchemy.dialects.mysql import TIMESTAMP
+import datetime
+from sqlalchemy.sql.expression import text
 
 class Weather(db.Model):
     __bind_key__ = app.config.get('EX_DB')
@@ -11,7 +14,11 @@ class Weather(db.Model):
     nx = db.Column(db.Integer)
     ny = db.Column(db.Integer)
     obsrValue = db.Column(db.Integer)
-
+    created_date = db.Column(
+        TIMESTAMP,
+        default=datetime.datetime.utcnow,
+        server_default=text('CURRENT_TIMESTAMP')
+    )
     def __init__(self, baseDate, baseTime, category, nx, ny, obsrValue):
         self.baseDate = baseDate
         self.baseTime = baseTime
@@ -51,7 +58,11 @@ class Mise(db.Model):
     CO = db.Column(db.Float)  # 일산화탄소농도(ppm)
     PM10 = db.Column(db.Float)  # 미세먼지(㎍/㎥)
     O3 = db.Column(db.Float)  # 오존농도(ppm)
-
+    created_date = db.Column(
+        TIMESTAMP,
+        default=datetime.datetime.utcnow,
+        server_default=text('CURRENT_TIMESTAMP')
+    )
     def __init__(self, MSRDT_DE, SO2, NO2, PM25, MSRSTE_NM, CO, PM10, O3):
         self.MSRDT_DE = MSRDT_DE
         self.SO2 = SO2

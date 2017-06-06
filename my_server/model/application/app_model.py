@@ -1,4 +1,7 @@
 from my_server.app import db, app
+from sqlalchemy.dialects.mysql import TIMESTAMP
+import datetime
+from sqlalchemy.sql.expression import text
 
 class AppModel(db.Model):
     __bind_key__ = app.config.get('DB_NAME')
@@ -16,7 +19,11 @@ class AppModel(db.Model):
     app_input_detail = db.Column(db.String(100), nullable=False )
     app_output = db.Column(db.String(100), nullable=False )
     app_output_detail = db.Column(db.Boolean, default=True)
-
+    created_date = db.Column(
+        TIMESTAMP,
+        default=datetime.datetime.utcnow,
+        server_default=text('CURRENT_TIMESTAMP')
+    )
     def __init__(self, id, app_name, app_detail, app_switch, app_input, app_input_detail, app_output, app_output_detail):
         self.id = id
         self.app_name = app_name

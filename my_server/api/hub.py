@@ -166,7 +166,7 @@ class node_connect(Resource):
             db.session.commit()
 
             # resp = make_response(200)
-            return 'hoyeon'
+            return 'success'
 
 @api.resource('/node/connect/info')
 class node_connect_info(Resource):
