@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request, redirect, url_for, jsonify
+from flask import request, redirect, url_for, jsonify, make_response
 from my_server.app import api
 from my_server.app import db
 from my_server.model.application.hub import Hub
@@ -120,7 +120,6 @@ class app_save(Resource):
 
         db.session.query(AppModel).delete()
 
-
         for i in json.loads(data.decode()):
             # print('i', type(i))
             # print('i.id', type(i['id']))
@@ -138,6 +137,21 @@ class app_save(Resource):
             db.session.commit()
 
         return jsonify(data.decode())
+
+
+@api.resource('/node/connect')
+class node_connect(Resource):
+    def get(self):
+        if True:
+            resp = make_response(200)
+            return resp
+
+        return 'go to post'
+
+    def post(self):
+        if True:
+            resp = make_response(200)
+            return resp
 
 
 # test
