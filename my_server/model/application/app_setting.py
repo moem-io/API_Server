@@ -19,7 +19,6 @@ class AppSetting(db.Model):
     out_sensor = db.Column(db.Integer, nullable=False )
     created_date = db.Column(
         TIMESTAMP,
-        default=datetime.datetime.utcnow,
         server_default=text('CURRENT_TIMESTAMP')
     )
 
@@ -32,4 +31,4 @@ class AppSetting(db.Model):
         self.out_sensor = out_sensor
 
     def __repr__(self):
-        return "<app_setting('%s', '%s', '%')>" % (self.id, self.app_id, self.in_node)
+        return "<app_setting('%s', '%s', '%s')>" % (self.id, self.app_id, self.in_node)

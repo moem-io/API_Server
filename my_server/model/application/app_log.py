@@ -19,7 +19,6 @@ class AppLog(db.Model):
 
     created_date = db.Column(
         TIMESTAMP,
-        default=datetime.datetime.utcnow,
         server_default=text('CURRENT_TIMESTAMP')
     )
 
