@@ -187,11 +187,11 @@ class app_setting_save(Resource):
         db.session.query(AppSetting).delete()
         for i in json.loads(data.decode()):
             item = AppSetting(
-                app_id=i.app_id,
-                in_node=i.in_node,
-                in_sensor=i.in_sensor,
-                out_node=i.out_nonde,
-                out_sensor=i.out_sensor)
+                app_id=i['app_id'],
+                in_node=i['in_node'],
+                in_sensor=i['in_sensor'],
+                out_node=i['out_node'],
+                out_sensor=i['out_sensor'])
             db.session.add(item)
             db.session.commit()
         return jsonify(data.decode())
