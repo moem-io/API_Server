@@ -10,7 +10,7 @@ from my_server.model.application.app_setting import AppSetting
 from my_server.model.application.outside_data import *
 from my_server.app import db
 import json
-
+from my_server.model.application.app_log import AppLog
 
 # @api.resource('/')
 # class index(Resource):
@@ -93,6 +93,26 @@ class n_s_info(Resource):
         # print('jsonify type', jsonify(data))
         return jsonify(data)
 
+@api.resource('/log/info')
+class LogInfo(Resource):
+    def get(self):
+        app_log = AppLog.query.all()
+        # date = str(app_log[0].created_date)
+        app_log_json = json.dumps(app_log, cls=AlchemyEncoder)
+        data = {}
+        data['log'] = json.loads(app_log_json)
+        # data['date'] = date
+
+        date_list = []
+        for i in app_log:
+            date_list.append(str(i.created_date))
+
+        # for i in data['log']:
+        for i, ch in enumerate(data['log']):
+            ch['created_date'] = date_list[i]
+
+        # print('jsonify type', jsonify(data))
+        return jsonify(data)
 
 @api.resource('/ex_info')
 class ex_info(Resource):
