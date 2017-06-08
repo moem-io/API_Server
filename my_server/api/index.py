@@ -111,7 +111,7 @@ class LogInfo(Resource):
         for i, ch in enumerate(data['log']):
             ch['created_date'] = date_list[i]
 
-        # print('jsonify type', jsonify(data))
+        print('jsonify type', jsonify(data))
         return jsonify(data)
 
 @api.resource('/ex_info')
