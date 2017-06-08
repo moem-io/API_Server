@@ -3,4 +3,5 @@ __all__ = [
     'hub',
     'outside_data',
     'app_model',
+    'app_setting',
 ]

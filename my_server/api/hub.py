@@ -5,12 +5,15 @@ from my_server.app import db
 from my_server.model.application.hub import Hub, node, link
 from my_server.model.application.user import User
 from my_server.model.application.app_model import AppModel
+from my_server.model.application.app_setting import AppSetting
 
 # from my_server.routes.oauth import current_user
 from my_server.app import oauth_provider, app
 import paho.mqtt.client as mqtt
 import json
 from my_server.api.index import AlchemyEncoder
+from sqlalchemy import desc
+
 
 @app.route('/api/hub_register', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
@@ -82,10 +85,28 @@ def upload():
     upload_app = request.form['upload_app']
     # print('upload_app', upload_app)
 
+    # todo 여기서 앱을 만들자!!
+
+    last_id = 1
+
+    last_app = AppModel.query.order_by(desc('id')).first()
+
+    if last_app:
+        last_id = last_app.id + 1
+        db.session.query(AppSetting).filter_by(app_id=0).delete()
+        db.session.query(AppSetting).filter_by(app_id=last_id).delete()
+        item = AppSetting(app_id=last_id, in_node=0, in_sensor=0, out_node=0, out_sensor=0)
+        db.session.add(item)
+        db.session.commit()
+    else:
+        item = AppSetting(app_id=0, in_node=0, in_sensor=0, out_node=0, out_sensor=0)
+        db.session.add(item)
+        db.session.commit()
+
     mqttc = mqtt.Client("python_pub")  # MQTT Client 오브젝트 생성
     mqttc.connect("13.124.19.161", 1883)  # MQTT 서버에 연결
     mqttc.publish("app/upload/00001214",
-                  upload_app_title + ',' + upload_app_sub + ',' + upload_app)  # 'hello/world' 토픽에 "Hello World!"라는 메시지 발행
+                  upload_app_title + ',' + upload_app_sub + ',' + upload_app + ',' + str(last_id))
     mqttc.loop(2)
 
     return jsonify(username='hi')
@@ -105,6 +126,23 @@ def switch(id):
 #     return jsonify(username='hi')
 
 
+@app.route('/app/setting/<int:id>', methods=['GET', 'POST'])
+def app_setting(id):
+    in_n = request.form['in_n']
+    in_s = request.form['in_s']
+    out_n = request.form['out_n']
+    out_s = request.form['out_s']
+
+    db.session.query(AppSetting).filter_by(app_id=0).delete()
+    db.session.query(AppSetting).filter_by(app_id=id).delete()
+
+    item = AppSetting(app_id=id, in_node=in_n, in_sensor=in_s, out_node=out_n, out_sensor=out_s)
+    db.session.add(item)
+    db.session.commit()
+
+    return 'save setting'
+
+
 @api.resource('/app/save')
 class app_save(Resource):
     def get(self):
@@ -114,9 +152,9 @@ class app_save(Resource):
         # req_body = request.get_json()
         # req_body = request.form['title']
         data = request.data
-        print('data', json.loads(data.decode()))
-        for i in json.loads(data.decode()):
-            print('i', i['app_name'])
+        # print('data', json.loads(data.decode()))
+        # for i in json.loads(data.decode()):
+        # print('i', i['app_name'])
 
         db.session.query(AppModel).delete()
 
@@ -124,7 +162,7 @@ class app_save(Resource):
             # print('i', type(i))
             # print('i.id', type(i['id']))
             app_model = AppModel(
-                id=i['id'],
+                app_id=i['app_id'],
                 app_name=i['app_name'],
                 app_detail=i['app_detail'],
                 app_switch=i['app_switch'],
@@ -132,9 +170,47 @@ class app_save(Resource):
                 app_input_detail=i['app_input_detail'],
                 app_output=i['app_output'],
                 app_output_detail=i['app_output_detail'],
+                created_date=i['created_date'],
             )
             db.session.add(app_model)
             db.session.commit()
+
+        return jsonify(data.decode())
+
+
+@api.resource('/app/save/one')
+class app_save_one(Resource):
+    def get(self):
+        return 'ho'
+
+    def post(self):
+        # req_body = request.get_json()
+        # req_body = request.form['title']
+        data = request.data
+        # print('data', json.loads(data.decode()))
+        # for i in json.loads(data.decode()):
+        #     print('i', i['app_name'])
+        i = json.loads(data.decode())
+        app_id = i['id']
+        # AppModel.query.filter_by(id=app_id).first().app_output_detail = app_one['app_output_detail']
+        AppModel.query.filter_by(id=app_id).delete()
+
+        # for i in app_one:
+        # print('i', type(i))
+        # print('i.id', type(i['id']))
+        app_model = AppModel(
+            app_id=i['app_id'],
+            app_name=i['app_name'],
+            app_detail=i['app_detail'],
+            app_switch=i['app_switch'],
+            app_input=i['app_input'],
+            app_input_detail=i['app_input_detail'],
+            app_output=i['app_output'],
+            app_output_detail=i['app_output_detail'],
+            created_date=i['created_date'],
+        )
+        db.session.add(app_model)
+        db.session.commit()
 
         return jsonify(data.decode())
 
@@ -168,6 +244,7 @@ class node_connect(Resource):
             # resp = make_response(200)
             return 'success'
 
+
 @api.resource('/node/connect/info')
 class node_connect_info(Resource):
     def get(self):
@@ -176,7 +253,6 @@ class node_connect_info(Resource):
         data['link'] = json.dumps(db.session.query(link).all(), cls=AlchemyEncoder)
         # print('data', data)
         return jsonify(data)
-
 
 
 # test

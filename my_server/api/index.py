@@ -6,6 +6,7 @@ from my_server.app import api
 from my_server.model.application.hub import Hub
 from flask import jsonify
 from my_server.model.application.app_model import AppModel
+from my_server.model.application.app_setting import AppSetting
 from my_server.model.application.outside_data import *
 from my_server.app import db
 import json
@@ -80,6 +81,17 @@ class app_info(Resource):
         # print('jsonify type', jsonify(data))
         return jsonify(data)
 
+@api.resource('/n_s_info')
+class n_s_info(Resource):
+    def get(self):
+        app_setting = AppSetting.query.all()
+        app_setting_json = json.dumps(app_setting, cls=AlchemyEncoder)
+        # print('data', app_model_json)
+        # print('data type', type(app_model_json))
+        data = {}
+        data['n_s'] = json.loads(app_setting_json)
+        # print('jsonify type', jsonify(data))
+        return jsonify(data)
 
 
 @api.resource('/ex_info')
