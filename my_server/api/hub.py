@@ -177,6 +177,25 @@ class app_save(Resource):
 
         return jsonify(data.decode())
 
+@api.resource('/app/setting/save')
+class app_setting_save(Resource):
+    def get(self):
+        return 'ho'
+
+    def post(self):
+        data = request.data
+        db.session.query(AppSetting).delete()
+        for i in json.loads(data.decode()):
+            item = AppSetting(
+                app_id=i.app_id,
+                in_node=i.in_node,
+                in_sensor=i.in_sensor,
+                out_node=i.out_nonde,
+                out_sensor=i.out_sensor)
+            db.session.add(item)
+            db.session.commit()
+        return jsonify(data.decode())
+
 
 @api.resource('/app/save/one')
 class app_save_one(Resource):
