@@ -6,6 +6,8 @@ from my_server.model.application.hub import Hub, node, link
 from my_server.model.application.user import User
 from my_server.model.application.app_model import AppModel
 from my_server.model.application.app_setting import AppSetting
+from my_server.model.application.app_log import AppLog
+
 
 # from my_server.routes.oauth import current_user
 from my_server.app import oauth_provider, app
@@ -92,7 +94,7 @@ def upload():
     last_app = AppModel.query.order_by(desc('id')).first()
 
     if last_app:
-        last_id = last_app.id + 1
+        last_id = last_app.app_id + 1
         db.session.query(AppSetting).filter_by(app_id=0).delete()
         db.session.query(AppSetting).filter_by(app_id=last_id).delete()
         item = AppSetting(app_id=last_id, in_node=0, in_sensor=0, out_node=0, out_sensor=0)
@@ -231,6 +233,26 @@ class app_save_one(Resource):
         db.session.add(app_model)
         db.session.commit()
 
+        return jsonify(data.decode())
+
+@api.resource('/app/log/save')
+class app_log_save(Resource):
+    def get(self):
+        return 'ho'
+
+    def post(self):
+        data = request.data
+        db.session.query(AppLog).delete()
+        for i in json.loads(data.decode()):
+            item = AppLog(
+                log_content=i['log_content'],
+                app_id=i['app_id'],
+                node=i['node'],
+                sensor=i['sensor'],
+                created_date=i['created_date']
+            )
+            db.session.add(item)
+            db.session.commit()
         return jsonify(data.decode())
 
 

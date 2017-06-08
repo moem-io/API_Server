@@ -4,4 +4,5 @@ __all__ = [
     'outside_data',
     'app_model',
     'app_setting',
+    'app_log',
 ]
