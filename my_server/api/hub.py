@@ -14,6 +14,7 @@ import json
 from my_server.api.index import AlchemyEncoder
 from sqlalchemy import desc
 
+data_log = None
 
 @app.route('/api/hub_register', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
@@ -176,6 +177,56 @@ class app_save(Resource):
             db.session.commit()
 
         return jsonify(data.decode())
+
+@api.resource('/log/save')
+class log_save(Resource):
+
+    def get(self):
+        return 'ho'
+
+    def post(self):
+        global data_log
+        # req_body = request.get_json()
+        # req_body = request.form['title']
+        # data = request.data
+        # print('data', json.loads(data.decode()))
+        # for i in json.loads(data.decode()):
+        # print('i', i['app_name'])
+
+        # db.session.query(AppModel).delete()
+        data_log = request.form['data']
+        # for i in json.loads(data.decode()):
+        #     # print('i', type(i))
+        #     # print('i.id', type(i['id']))
+        #     app_model = AppModel(
+        #         app_id=i['app_id'],
+        #         app_name=i['app_name'],
+        #         app_detail=i['app_detail'],
+        #         app_switch=i['app_switch'],
+        #         app_input=i['app_input'],
+        #         app_input_detail=i['app_input_detail'],
+        #         app_output=i['app_output'],
+        #         app_output_detail=i['app_output_detail'],
+        #         created_date=i['created_date'],
+        #     )
+        #     db.session.add(app_model)
+        #     db.session.commit()
+
+        # return jsonify(data.decode())
+        return 'suc'
+
+@api.resource('/log/info')
+class log_info(Resource):
+    def get(self):
+        global data_log
+        app_setting = AppSetting.query.all()
+        app_setting_json = json.dumps(app_setting, cls=AlchemyEncoder)
+        # print('data', app_model_json)
+        # print('data type', type(app_model_json))
+        data = {}
+        data['n_s'] = json.loads(app_setting_json)
+        # print('jsonify type', jsonify(data))
+        return data_log
 
 
 @api.resource('/app/save/one')
