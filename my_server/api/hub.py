@@ -6,6 +6,8 @@ from my_server.model.application.hub import Hub, node, link
 from my_server.model.application.user import User
 from my_server.model.application.app_model import AppModel
 from my_server.model.application.app_setting import AppSetting
+from my_server.model.application.app_log import AppLog
+
 
 # from my_server.routes.oauth import current_user
 from my_server.app import oauth_provider, app
@@ -14,7 +16,6 @@ import json
 from my_server.api.index import AlchemyEncoder
 from sqlalchemy import desc
 
-data_log = None
 
 @app.route('/api/hub_register', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
@@ -93,7 +94,7 @@ def upload():
     last_app = AppModel.query.order_by(desc('id')).first()
 
     if last_app:
-        last_id = last_app.id + 1
+        last_id = last_app.app_id + 1
         db.session.query(AppSetting).filter_by(app_id=0).delete()
         db.session.query(AppSetting).filter_by(app_id=last_id).delete()
         item = AppSetting(app_id=last_id, in_node=0, in_sensor=0, out_node=0, out_sensor=0)
@@ -178,55 +179,24 @@ class app_save(Resource):
 
         return jsonify(data.decode())
 
-@api.resource('/log/save')
-class log_save(Resource):
-
+@api.resource('/app/setting/save')
+class app_setting_save(Resource):
     def get(self):
         return 'ho'
 
     def post(self):
-        global data_log
-        # req_body = request.get_json()
-        # req_body = request.form['title']
-        # data = request.data
-        # print('data', json.loads(data.decode()))
-        # for i in json.loads(data.decode()):
-        # print('i', i['app_name'])
-
-        # db.session.query(AppModel).delete()
-        data_log = request.form['data']
-        # for i in json.loads(data.decode()):
-        #     # print('i', type(i))
-        #     # print('i.id', type(i['id']))
-        #     app_model = AppModel(
-        #         app_id=i['app_id'],
-        #         app_name=i['app_name'],
-        #         app_detail=i['app_detail'],
-        #         app_switch=i['app_switch'],
-        #         app_input=i['app_input'],
-        #         app_input_detail=i['app_input_detail'],
-        #         app_output=i['app_output'],
-        #         app_output_detail=i['app_output_detail'],
-        #         created_date=i['created_date'],
-        #     )
-        #     db.session.add(app_model)
-        #     db.session.commit()
-
-        # return jsonify(data.decode())
-        return 'suc'
-
-@api.resource('/log/info')
-class log_info(Resource):
-    def get(self):
-        global data_log
-        app_setting = AppSetting.query.all()
-        app_setting_json = json.dumps(app_setting, cls=AlchemyEncoder)
-        # print('data', app_model_json)
-        # print('data type', type(app_model_json))
-        data = {}
-        data['n_s'] = json.loads(app_setting_json)
-        # print('jsonify type', jsonify(data))
-        return data_log
+        data = request.data
+        db.session.query(AppSetting).delete()
+        for i in json.loads(data.decode()):
+            item = AppSetting(
+                app_id=i['app_id'],
+                in_node=i['in_node'],
+                in_sensor=i['in_sensor'],
+                out_node=i['out_node'],
+                out_sensor=i['out_sensor'])
+            db.session.add(item)
+            db.session.commit()
+        return jsonify(data.decode())
 
 
 @api.resource('/app/save/one')
@@ -263,6 +233,26 @@ class app_save_one(Resource):
         db.session.add(app_model)
         db.session.commit()
 
+        return jsonify(data.decode())
+
+@api.resource('/app/log/save')
+class app_log_save(Resource):
+    def get(self):
+        return 'ho'
+
+    def post(self):
+        data = request.data
+        db.session.query(AppLog).delete()
+        for i in json.loads(data.decode()):
+            item = AppLog(
+                log_content=i['log_content'],
+                app_id=i['app_id'],
+                node=i['node'],
+                sensor=i['sensor'],
+                created_date=i['created_date']
+            )
+            db.session.add(item)
+            db.session.commit()
         return jsonify(data.decode())
 
 

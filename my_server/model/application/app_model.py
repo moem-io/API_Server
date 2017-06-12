@@ -19,11 +19,11 @@ class AppModel(db.Model):
     app_input = db.Column(db.String(100), nullable=False )
     app_input_detail = db.Column(db.String(100), nullable=False )
     app_output = db.Column(db.String(100), nullable=False )
-    app_output_detail = db.Column(db.String(100), default=True)
+    app_output_detail = db.Column(db.String(100), nullable=False)
+
     created_date = db.Column(
-        TIMESTAMP,
-        default=datetime.datetime.utcnow,
-        server_default=text('CURRENT_TIMESTAMP')
+        db.String(100),
+        default=datetime.datetime.utcnow
     )
 
     def __init__(self, app_id, app_name, app_detail, app_switch, app_input, app_input_detail, app_output, app_output_detail, created_date):

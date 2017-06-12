@@ -17,10 +17,10 @@ class AppSetting(db.Model):
     in_sensor = db.Column(db.Integer, nullable=False )
     out_node = db.Column(db.Integer, nullable=False )
     out_sensor = db.Column(db.Integer, nullable=False )
+
     created_date = db.Column(
-        TIMESTAMP,
+        db.String(100),
         default=datetime.datetime.utcnow,
-        server_default=text('CURRENT_TIMESTAMP')
     )
 
     def __init__(self, app_id, in_node, in_sensor, out_node, out_sensor):
@@ -28,8 +28,7 @@ class AppSetting(db.Model):
         self.in_node = in_node
         self.in_sensor = in_sensor
         self.out_node = out_node
-        self.out_node = out_node
         self.out_sensor = out_sensor
 
     def __repr__(self):
-        return "<app_setting('%s', '%s', '%')>" % (self.id, self.app_id, self.in_node)
+        return "<app_setting('%s', '%s', '%s')>" % (self.id, self.app_id, self.in_node)
