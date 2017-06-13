@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy.sql.expression import text
 
 class AppModel(db.Model):
-    __bind_key__ = app.config.get('DB_NAME')
+    __bind_key__ = app.config.get('API_APP_DB')
 
     __tablename__ = 'app_model'
     __table_args__ = {
@@ -23,7 +23,7 @@ class AppModel(db.Model):
 
     created_date = db.Column(
         db.String(100),
-        default=datetime.datetime.utcnow
+        default=str(datetime.datetime.utcnow()).split('.')[0],
     )
 
     def __init__(self, app_id, app_name, app_detail, app_switch, app_input, app_input_detail, app_output, app_output_detail, created_date):

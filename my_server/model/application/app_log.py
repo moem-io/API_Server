@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy.sql.expression import text
 
 class AppLog(db.Model):
-    __bind_key__ = app.config.get('DB_NAME')
+    __bind_key__ = app.config.get('API_APP_DB')
     __tablename__ = 'app_log'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
@@ -18,7 +18,7 @@ class AppLog(db.Model):
 
     created_date = db.Column(
         db.String(100),
-        default=datetime.datetime.utcnow,
+        default=str(datetime.datetime.utcnow()).split('.')[0],
     )
 
     def __init__(self, log_content, app_id, node, sensor, created_date):

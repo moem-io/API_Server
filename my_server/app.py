@@ -27,6 +27,7 @@ from my_server.model import *
 #     db.create_all(bind=app.config[x])
 db.create_all(bind=app.config['DB_NAME'])
 db.create_all(bind=app.config['EX_DB'])
+db.create_all(bind=app.config['API_APP_DB'])
 
 from my_server.api import *
 from my_server.routes import *

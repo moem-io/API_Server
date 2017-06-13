@@ -7,6 +7,7 @@ DB_PS = os.environ['DB_PS']
 DB_HOST = os.environ['DB_HOST']
 
 EX_DB = os.environ['EX_DB']
+API_APP_DB = os.environ['api_app_db']
 
 SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{0}:{1}@{2}/{3}".format(DB_ID,
                                                                    DB_PS,
@@ -22,6 +23,10 @@ SQLALCHEMY_BINDS = {
                                                        DB_PS,
                                                        DB_HOST,
                                                        EX_DB),
+    'api_app_db': "mysql+pymysql://{0}:{1}@{2}/{3}".format(DB_ID,
+                                                           DB_PS,
+                                                           DB_HOST,
+                                                           API_APP_DB),
 }
 
 # SQLALCHEMY_TRACK_MODIFICATIONS = True
