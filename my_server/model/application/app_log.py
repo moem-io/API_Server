@@ -17,9 +17,7 @@ class AppLog(db.Model):
     sensor = db.Column(db.String(100), nullable=False)
 
     created_date = db.Column(
-        db.String(100),
-        default=str(datetime.datetime.utcnow()).split('.')[0],
-    )
+        db.String(100), nullable=False)
 
     def __init__(self, log_content, app_id, node, sensor, created_date):
         self.log_content = log_content
