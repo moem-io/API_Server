@@ -8,7 +8,6 @@ from my_server.model.application.app_model import AppModel
 from my_server.model.application.app_setting import AppSetting
 from my_server.model.application.app_log import AppLog
 
-
 # from my_server.routes.oauth import current_user
 from my_server.app import oauth_provider, app
 import paho.mqtt.client as mqtt
@@ -86,13 +85,10 @@ def upload():
     upload_app_sub = request.form['upload_app_sub']
     upload_app = request.form['upload_app']
     # print('upload_app', upload_app)
-
     # todo 여기서 앱을 만들자!!
 
     last_id = 1
-
     last_app = AppModel.query.order_by(desc('id')).first()
-
     if last_app:
         last_id = last_app.app_id + 1
         db.session.query(AppSetting).filter_by(app_id=0).delete()
@@ -105,8 +101,8 @@ def upload():
         db.session.add(item)
         db.session.commit()
 
-    mqttc = mqtt.Client("python_pub")  # MQTT Client 오브젝트 생성
-    mqttc.connect("13.124.19.161", 1883)  # MQTT 서버에 연결
+    mqttc = mqtt.Client("python_pub")
+    mqttc.connect("13.124.19.161", 1883)
     mqttc.publish("app/upload/00001214",
                   upload_app_title + ',' + upload_app_sub + ',' + upload_app + ',' + str(last_id))
     mqttc.loop(2)
@@ -144,6 +140,12 @@ def app_setting(id):
 
     return 'save setting'
 
+@app.route('/app/setting/delete/<int:id>', methods=['GET', 'POST'])
+def app_setting_delete(id):
+    db.session.query(AppSetting).filter_by(app_id=id).delete()
+    db.session.commit()
+
+    return 'save setting'
 
 @api.resource('/app/save')
 class app_save(Resource):
@@ -175,9 +177,10 @@ class app_save(Resource):
                 created_date=i['created_date'],
             )
             db.session.add(app_model)
-            db.session.commit()
+        db.session.commit()
 
         return jsonify(data.decode())
+
 
 @api.resource('/app/setting/save')
 class app_setting_save(Resource):
@@ -195,7 +198,7 @@ class app_setting_save(Resource):
                 out_node=i['out_node'],
                 out_sensor=i['out_sensor'])
             db.session.add(item)
-            db.session.commit()
+        db.session.commit()
         return jsonify(data.decode())
 
 
@@ -235,6 +238,7 @@ class app_save_one(Resource):
 
         return jsonify(data.decode())
 
+
 @api.resource('/app/log/save')
 class app_log_save(Resource):
     def get(self):
@@ -252,7 +256,7 @@ class app_log_save(Resource):
                 created_date=i['created_date']
             )
             db.session.add(item)
-            db.session.commit()
+        db.session.commit()
         return jsonify(data.decode())
 
 
