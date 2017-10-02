@@ -16,6 +16,7 @@ import json
 from my_server.api.index import AlchemyEncoder
 from sqlalchemy import desc
 
+ip_url = "13.124.186.174"
 
 @app.route('/api/hub_register', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
@@ -106,7 +107,7 @@ def upload():
         db.session.commit()
 
     mqttc = mqtt.Client("python_pub")  # MQTT Client 오브젝트 생성
-    mqttc.connect("13.124.19.161", 1883)  # MQTT 서버에 연결
+    mqttc.connect(ip_url, 1883)  # MQTT 서버에 연결
     mqttc.publish("app/upload/00001214",
                   upload_app_title + ',' + upload_app_sub + ',' + upload_app + ',' + str(last_id))
     mqttc.loop(2)
@@ -309,7 +310,7 @@ def post_test():
 def test_mqtt():
     mqttc = mqtt.Client("python_pub")  # MQTT Client 오브젝트 생성
     # mqttc.connect("test.mosquitto.org", 1883)    # MQTT 서버에 연결
-    mqttc.connect("13.124.19.161", 1883)  # MQTT 서버에 연결
+    mqttc.connect(ip_url, 1883)  # MQTT 서버에 연결
     mqttc.publish("control/motor/00001214", "1,0")  # 'hello/world' 토픽에 "Hello World!"라는 메시지 발행
     mqttc.loop(2)
     return 'suc'
