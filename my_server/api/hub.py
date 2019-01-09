@@ -16,7 +16,7 @@ import json
 from my_server.api.index import AlchemyEncoder
 from sqlalchemy import desc
 
-ip_url = "13.124.186.174"
+ip_url = "13.125.243.69"
 
 @app.route('/api/hub_register', methods=['GET', 'POST'])
 @oauth_provider.require_oauth()
